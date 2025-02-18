@@ -126,13 +126,13 @@ def converter (num_val):
                             fin += sum(num_vals[2:])
 
             # For two digits in the ten million value
-            elif num_vals[1] != 1000000:
+            elif num_vals[1] != 1000000 and num_vals[1]!=100:
                 if len(num_vals) == 12:  # Complete set of values:
                     fin = (million * sum(num_vals[0:2])) + (thousand * hundred) * num_vals[3] + (sum(num_vals[5:7]) * thousand) + \
                           (hundred * num_vals[8]) + sum(num_vals[10:])
                 else:  # Incomplete set
                     fin = million * sum(num_vals[0:2])
-                    if num_vals[2] == 1000000 and 1000 in num_vals:  # Applicable if hundred thousand is available
+                    if num_vals[4] == 100 and 1000 in num_vals:  # Applicable if hundred thousand is available
                         fin += (thousand * hundred) * num_vals[3]
                         if len(num_vals)>6:
                             if num_vals[5] != 1000 and sum(num_vals[5:]) >= 1000:  # ten thousands/thousands place addition
@@ -187,32 +187,186 @@ def converter (num_val):
 
             #For hundred million
             elif num_vals[1]== 100:
-                if 100>sum(num_vals[7:9])>=21:
-                    if sum(num_vals[10:]) >= 100:
-                        fin= ((million*hundred*num_vals[0])+(million*(num_vals[2]+num_vals[3])) +
-                              (thousand*hundred)*num_vals[5] + (sum(num_vals[7:9])*thousand) + (hundred*num_vals[10]) +
-                              sum(num_vals[12:]))
+                if len(num_vals)== 14: #Complete set
+                    fin= (hundred * million * num_vals[0]) + (million * sum(num_vals[2:4]) + (thousand * hundred
+                          * num_vals[5]) + (sum(num_vals[7:9]) * thousand) + (hundred * num_vals[10]) +
+                          sum(num_vals[12:]))
+                else: #Incomplete set
+                    fin = hundred * million * num_vals[0]
+                    if num_vals[2]!= 1000000:
+                        if num_vals[3]!=1000000:
+                            fin += million * sum(num_vals[2:4])
+                            if len(num_vals)>5:
+                                if 1000 in num_vals:
+                                    if num_vals[6]==100: # Applicable if hundred thousand is available
+                                        fin += (thousand * hundred) * num_vals[5]
+                                        if len(num_vals) > 7:
+                                            if num_vals[7] != 1000 and sum(
+                                                    num_vals[7:]) >= 1000:  # ten thousands/thousands place addition
+                                                if num_vals[8] != 1000:
+                                                    fin += sum(num_vals[7:9]) * thousand
+                                                    if len(num_vals) > 10:
+                                                        if sum(num_vals[10:]) >= 100:
+                                                            fin += (hundred * num_vals[10])
+                                                        else:
+                                                            fin += sum(num_vals[10:])
+                                                else:
+                                                    fin += num_vals[7] * thousand
+                                                    if len(num_vals) > 9:
+                                                        if sum(num_vals[9:]) >= 100 and len(num_vals) >= 13:
+                                                            fin += (hundred * num_vals[9]) + sum(num_vals[11:])
+                                                        elif sum(num_vals[9:]) >= 100 and len(num_vals) == 12:
+                                                            fin += hundred * num_vals[9]
+                                                        else:
+                                                            fin += sum(num_vals[9:])
+                                            elif 1000 > sum(num_vals[8:]) >= 100:  # hundreds place
+                                                fin += num_vals[8] * hundred
+                                                if len(num_vals) >= 11:
+                                                    fin += sum(num_vals[10:])
+                                            else:  # tens and ones place
+                                                fin += sum(num_vals[8:])
+                                    else:  # Application for the ten thousand/thousand place
+                                        if num_vals[6] != 1000:
+                                            fin += thousand * (sum(num_vals[5:7]))
+                                            if len(num_vals) > 8:
+                                                if sum(num_vals[8:]) >= 100 and len(num_vals) >=11:
+                                                    fin += hundred * num_vals[8] + sum(num_vals[10:])
+                                                elif sum(num_vals[8:]) >= 100 and len(num_vals) == 10:
+                                                    fin += hundred * num_vals[8]
+                                                else:
+                                                    fin += sum(num_vals[8:])
+                                        else:
+                                            fin += thousand * num_vals[5]
+                                            if len(num_vals) > 7:
+                                                if sum(num_vals[7:]) >= 100 and len(num_vals) >= 10:
+                                                    fin += hundred * num_vals[7] + sum(num_vals[9:])
+                                                elif sum(num_vals[7:]) >= 100 and len(num_vals) == 9:
+                                                    fin += hundred * num_vals[7]
+                                                else:
+                                                    fin += sum(num_vals[7:])
+                                else:  # Application for hundreds/tens/ones
+                                    if sum(num_vals[5:]) >= 100 and len(num_vals) >= 8:
+                                        fin += hundred * num_vals[5] + sum(num_vals[7:])
+                                    elif sum(num_vals[5:]) >= 100 and len(num_vals) == 7:
+                                        fin += hundred * num_vals[5]
+                                    else:
+                                        fin += sum(num_vals[5:])
+
+                        elif num_vals[3]== 1000000:
+                            fin += million * num_vals[2]
+                            if len(num_vals) > 4:
+                                if 1000 in num_vals:
+                                    if num_vals[5] == 100:  # Applicable if hundred thousand is available
+                                        fin += (thousand * hundred) * num_vals[4]
+                                        if len(num_vals) > 6:
+                                            if num_vals[6] != 1000 and sum(
+                                                    num_vals[6:]) >= 1000:  # ten thousands/thousands place addition
+                                                if num_vals[7] != 1000:
+                                                    fin += sum(num_vals[6:8]) * thousand
+                                                    if len(num_vals) > 9:
+                                                        if sum(num_vals[9:]) >= 100:
+                                                            fin += (hundred * num_vals[9])
+                                                        else:
+                                                            fin += sum(num_vals[9:])
+                                                else:
+                                                    fin += num_vals[6] * thousand
+                                                    if len(num_vals) > 8:
+                                                        if sum(num_vals[8:]) >= 100 and len(num_vals) >= 11:
+                                                            fin += (hundred * num_vals[8]) + sum(num_vals[10:])
+                                                        elif sum(num_vals[8:]) >= 100 and len(num_vals) == 10:
+                                                            fin += hundred * num_vals[8]
+                                                        else:
+                                                            fin += sum(num_vals[8:])
+                                            elif 1000 > sum(num_vals[7:]) >= 100:  # hundreds place
+                                                fin += num_vals[7] * hundred
+                                                if len(num_vals) >= 10:
+                                                    fin += sum(num_vals[9:])
+                                            else:  # tens and ones place
+                                                fin += sum(num_vals[7:])
+                                    else:  # Application for the ten thousand/thousand place
+                                        if num_vals[5] != 1000:
+                                            fin += thousand * (sum(num_vals[4:6]))
+                                            if len(num_vals) > 7:
+                                                if sum(num_vals[7:]) >= 100 and len(num_vals) >= 10:
+                                                    fin += hundred * num_vals[7] + sum(num_vals[9:])
+                                                elif sum(num_vals[7:]) >= 100 and len(num_vals) == 9:
+                                                    fin += hundred * num_vals[7]
+                                                else:
+                                                    fin += sum(num_vals[7:])
+                                        else:
+                                            fin += thousand * num_vals[4]
+                                            if len(num_vals) > 6:
+                                                if sum(num_vals[6:]) >= 100 and len(num_vals) >= 9:
+                                                    fin += hundred * num_vals[6] + sum(num_vals[8:])
+                                                elif sum(num_vals[6:]) >= 100 and len(num_vals) == 8:
+                                                    fin += hundred * num_vals[6]
+                                                else:
+                                                    fin += sum(num_vals[6:])
+                                else:  # Application for hundreds/tens/ones
+                                    if sum(num_vals[4:]) >= 100 and len(num_vals) >= 7:
+                                        fin += hundred * num_vals[4] + sum(num_vals[6:])
+                                    elif sum(num_vals[4:]) >= 100 and len(num_vals) == 6:
+                                        fin += hundred * num_vals[4]
+                                    else:
+                                        fin += sum(num_vals[4:])
+
                     else:
-                        fin = ((million*hundred*num_vals[0])+(million*(num_vals[2]+num_vals[3])) +
-                               (thousand * hundred) * num_vals[5] + (sum(num_vals[7:9]) * thousand) +
-                               sum(num_vals[10:]))
-                #Applies for one value only for the ten thousand place
-                elif sum(num_vals[7:9])>=100 and num_vals[5]!=1000:
-                    if sum(num_vals[9:]) >= 100:
-                        fin = ((million*hundred*num_vals[0])+(million*(num_vals[2]+num_vals[3])) +
-                               (thousand * hundred) * num_vals[5] + (num_vals[7] * thousand) + (hundred * num_vals[9]) +
-                               sum(num_vals[11:]))
-                    else:
-                        fin = ((million*hundred*num_vals[0])+(million*(num_vals[2]+num_vals[3])) +
-                               (thousand * hundred) * num_vals[5] + (num_vals[7] * thousand) + sum(num_vals[9:]))
-                #Applies for a value with no ten thousand place
-                elif num_vals[7]==1000:
-                    if sum(num_vals[8:])>=100:
-                        fin = ((million*hundred*num_vals[0])+(million*(num_vals[2]+num_vals[3])) +
-                               ((thousand * hundred) * num_vals[5]) + (hundred * num_vals[8]) + sum(num_vals[10:]))
-                    else:
-                        fin = ((million*hundred*num_vals[0])+(million*(num_vals[2]+num_vals[3])) +
-                               ((thousand * hundred) * num_vals[5]) + sum(num_vals[8:]))
+                        if 1000 in num_vals:
+                            if num_vals[4] == 100:  # Applicable if hundred thousand is available
+                                fin += (thousand * hundred) * num_vals[3]
+                                if len(num_vals) > 4:
+                                    if num_vals[5] != 1000 and sum(
+                                            num_vals[5:]) >= 1000:  # ten thousands/thousands place addition
+                                        if num_vals[6] != 1000:
+                                            fin += sum(num_vals[5:7]) * thousand
+                                            if len(num_vals)>8:
+                                                if sum(num_vals[8:]) >= 100 and len(num_vals) >= 11:
+                                                    fin += (hundred * num_vals[8]) + sum(num_vals[10:])
+                                                elif sum(num_vals[8:]) >= 100 and len(num_vals) == 10:
+                                                    fin += hundred * num_vals[8]
+                                                else:
+                                                    fin += sum(num_vals[8:])
+                                        else:
+                                            fin += num_vals[5] * thousand
+                                            if len(num_vals) > 7:
+                                                if sum(num_vals[7:]) >= 100 and len(num_vals) >= 10:
+                                                    fin += (hundred * num_vals[7]) + sum(num_vals[9:])
+                                                elif sum(num_vals[7:]) >= 100 and len(num_vals) == 9:
+                                                    fin += hundred * num_vals[7]
+                                                else:
+                                                    fin += sum(num_vals[7:])
+                                    elif 1000 > sum(num_vals[6:]) >= 100:  # hundreds place
+                                        fin += num_vals[6] * hundred
+                                        if len(num_vals) >= 9:
+                                            fin += sum(num_vals[8:])
+                                    else:  # tens and ones place
+                                        fin += sum(num_vals[6:])
+                            else:  # Application for the ten thousand/thousand place
+                                if num_vals[4] != 1000:
+                                    fin += thousand * (sum(num_vals[3:5]))
+                                    if len(num_vals) > 6:
+                                        if sum(num_vals[6:]) >= 100 and len(num_vals) >= 9:
+                                            fin += hundred * num_vals[6] + sum(num_vals[8:])
+                                        elif sum(num_vals[6:]) >= 100 and len(num_vals) == 8:
+                                            fin += hundred * num_vals[6]
+                                        else:
+                                            fin += sum(num_vals[6:])
+                                else:
+                                    fin += thousand * num_vals[3]
+                                    if len(num_vals) > 5:
+                                        if sum(num_vals[5:]) >= 100 and len(num_vals) >= 8:
+                                            fin += hundred * num_vals[5] + sum(num_vals[7:])
+                                        elif sum(num_vals[5:]) >= 100 and len(num_vals) == 7:
+                                            fin += hundred * num_vals[5]
+                                        else:
+                                            fin += sum(num_vals[5:])
+                        else:  # Application for hundreds/tens/ones
+                            if sum(num_vals[3:]) >= 100 and len(num_vals) >= 6:
+                                fin += hundred * num_vals[3] + sum(num_vals[5:])
+                            elif sum(num_vals[3:]) >= 100 and len(num_vals) == 5:
+                                fin += hundred * num_vals[3]
+                            else:
+                                fin += sum(num_vals[3:])
 
         # Hundreds thousands
         elif num_vals[1] == 100 and 1000 in num_vals:
